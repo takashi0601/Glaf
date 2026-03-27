@@ -32,7 +32,7 @@
 <script>
 require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
 
-  // ★必ず /0
+  // レイヤー or テーブル
   const layer = new FeatureLayer({
     url: "https://services9.arcgis.com/YtkgVT3n52Tm7z1d/arcgis/rest/services/waterStationTable/FeatureServer/0"
   });
@@ -59,19 +59,82 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       ? 0
       : (total稼働数 / total稼働可能数 * 100).toFixed(1);
 
-    const labels = ["稼働数", "稼働可能数", "給水ステーション"];
-    const values = [total稼働数, total稼働可能数, total給水];
+    // const labels = ["稼働数", "稼働可能数", "給水ステーション"];
+    // const values = [total稼働数, total稼働可能数, total給水];
 
-    createChart('barChart', 'bar', labels, values);
-    createChart('lineChart', 'line', labels, values);
-    createChart('pieChart', 'pie', labels, values);
+    // createChart('barChart', 'bar', labels, values);
+    // createChart('lineChart', 'line', labels, values);
+    // createChart('pieChart', 'pie', labels, values);
+
+    const labelsSingle = ["合計"];
+const labelsLine = ["合計"];
+
+// ===== 棒グラフ（給水のみ）=====
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: labelsSingle,
+    datasets: [{
+      label: "給水ステーション数",
+      data: [total給水]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+// ===== 線グラフ（2系列）=====
+new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels: labelsLine,
+    datasets: [
+      {
+        label: "稼働数",
+        data: [total稼働数],
+        fill: false
+      },
+      {
+        label: "稼働可能数",
+        data: [total稼働可能数],
+        fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+// ===== 円グラフ（割合）=====
+new Chart(document.getElementById('pieChart'), {
+  type: 'pie',
+  data: {
+    labels: ["稼働数", "未稼働"],
+    datasets: [{
+      data: [
+        total稼働数,
+        total稼働可能数 - total稼働数
+      ]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
 
     const tbody = document.querySelector('#dataTable tbody');
     tbody.innerHTML = `
-      <tr><td>稼働数</td><td>${total稼働数}</td></tr>
-      <tr><td>稼働可能数</td><td>${total稼働可能数}</td></tr>
-      <tr><td>給水ステーション</td><td>${total給水}</td></tr>
-      <tr><td>稼働率</td><td>${稼働率}%</td></tr>
+      <tr>
+        <td>${total稼働数}</td>
+        <td>${total稼働可能数}</td>
+        <td>${total給水}</td>
+        <td>${稼働率}%</td>
+      </tr>
     `;
   });
 
