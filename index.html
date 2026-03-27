@@ -6,7 +6,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- ArcGIS -->
+  <!-- ArcGIS Maps SDK for JavaScript -->
   <script src="https://js.arcgis.com/4.29/"></script>
 
   <style>
@@ -21,9 +21,9 @@
 
 <body>
   <div class="container">
-    <canvas id="barChart"></canvas>
-    <canvas id="lineChart"></canvas>
-    <canvas id="pieChart"></canvas>
+    <canvas id="barChart"></canvas> //棒グラフ
+    <canvas id="lineChart"></canvas> //線グラフ
+    <canvas id="pieChart"></canvas> //円グラフ
   </div>    
 
   <table id="dataTable">
@@ -88,7 +88,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     `;
   });
 
-  // ===== 棒グラフ（給水のみ）=====
+  // ===== 棒グラフ =====
   new Chart(document.getElementById('barChart'), {
     type: 'bar',
     data: {
@@ -104,7 +104,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     }
   });
 
-  // ===== 線グラフ（2系列）=====
+  // ===== 線グラフ =====
   new Chart(document.getElementById('lineChart'), {
     type: 'line',
     data: {
@@ -128,7 +128,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     }
   });
 
-  // ===== 円グラフ（割合）=====
+  // ===== 円グラフ =====
   const total稼働数 = 稼働数配列.reduce((a, b) => a + b, 0);
   const total可能 = 稼働可能数配列.reduce((a, b) => a + b, 0);
 
@@ -153,10 +153,6 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
 
     function createChart(id, type, labels, values) {
       const el = document.getElementById(id);
-      if (!el) {
-        console.error(id + " が見つからない");
-        return;
-      }
 
       new Chart(el, {
         type: type,
