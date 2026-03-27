@@ -21,7 +21,7 @@
 
 <body>
 
-<canvas id="barChart""></canvas>
+<canvas id="barChart"></canvas>
 <canvas id="lineChart"></canvas>
 <canvas id="pieChart"></canvas>
 
@@ -53,38 +53,48 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     returnGeometry: false
   }).then(res => {
 
-    let total稼働数 = 0;
-    let total稼働可能数 = 0;
-    let total給水 = 0;
+    const labels = [];
+const 稼働数配列 = [];
+const 稼働可能数配列 = [];
+const 給水配列 = [];
 
-    res.features.forEach(f => {
-      total稼働数 += Number(f.attributes["稼働数"]) || 0;
-      total稼働可能数 += Number(f.attributes["稼働可能数"]) || 0;
-      total給水 += Number(f.attributes["災害時給水ステーション数"]) || 0;
-    });
+const tbody = document.querySelector('#dataTable tbody');
+tbody.innerHTML = '';
 
-    const 稼働率 = total稼働可能数 === 0
-      ? 0
-      : (total稼働数 / total稼働可能数 * 100).toFixed(1);
+res.features.forEach((f, index) => {
 
-    // const labels = ["稼働数", "稼働可能数", "給水ステーション"];
-    // const values = [total稼働数, total稼働可能数, total給水];
+  const 稼働数 = Number(f.attributes["稼働数"]) || 0;
+  const 稼働可能数 = Number(f.attributes["稼働可能数"]) || 0;
+  const 給水 = Number(f.attributes["災害時給水ステーション数"]) || 0;
 
-    // createChart('barChart', 'bar', labels, values);
-    // createChart('lineChart', 'line', labels, values);
-    // createChart('pieChart', 'pie', labels, values);
+  const 稼働率 = 稼働可能数 === 0
+    ? 0
+    : (稼働数 / 稼働可能数 * 100).toFixed(1);
 
-    const labelsSingle = ["合計"];
-const labelsLine = ["合計"];
+  labels.push("No." + (index + 1));
+
+  稼働数配列.push(稼働数);
+  稼働可能数配列.push(稼働可能数);
+  給水配列.push(給水);
+
+  tbody.innerHTML += `
+    <tr>
+      <td>${稼働数}</td>
+      <td>${稼働可能数}</td>
+      <td>${給水}</td>
+      <td>${稼働率}%</td>
+    </tr>
+  `;
+});
 
 // ===== 棒グラフ（給水のみ）=====
 new Chart(document.getElementById('barChart'), {
   type: 'bar',
   data: {
-    labels: labelsSingle,
+    labels: labels,
     datasets: [{
       label: "給水ステーション数",
-      data: [total給水]
+      data: 給水配列
     }]
   },
   options: {
@@ -97,16 +107,16 @@ new Chart(document.getElementById('barChart'), {
 new Chart(document.getElementById('lineChart'), {
   type: 'line',
   data: {
-    labels: labelsLine,
+    labels: labels,
     datasets: [
       {
         label: "稼働数",
-        data: [total稼働数],
+        data: 稼働数配列,
         fill: false
       },
       {
         label: "稼働可能数",
-        data: [total稼働可能数],
+        data: 稼働可能数配列,
         fill: false
       }
     ]
@@ -118,14 +128,17 @@ new Chart(document.getElementById('lineChart'), {
 });
 
 // ===== 円グラフ（割合）=====
+const total稼働数 = 稼働数配列.reduce((a, b) => a + b, 0);
+const total可能 = 稼働可能数配列.reduce((a, b) => a + b, 0);
+
 new Chart(document.getElementById('pieChart'), {
-  type: 'pie',
+  type: 'doughnut',
   data: {
-    labels: ["稼働数", "未稼働"],
+    labels: ["稼働", "未稼働"],
     datasets: [{
       data: [
         total稼働数,
-        total稼働可能数 - total稼働数
+        total可能 - total稼働数
       ]
     }]
   },
@@ -135,15 +148,6 @@ new Chart(document.getElementById('pieChart'), {
   }
 });
 
-    const tbody = document.querySelector('#dataTable tbody');
-    tbody.innerHTML = `
-      <tr>
-        <td>${total稼働数}</td>
-        <td>${total稼働可能数}</td>
-        <td>${total給水}</td>
-        <td>${稼働率}%</td>
-      </tr>
-    `;
   });
 
   function createChart(id, type, labels, values) {
