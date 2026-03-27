@@ -42,7 +42,6 @@ require([
   "esri/layers/FeatureLayer"
 ], function(FeatureLayer) {
 
-  // レイヤーをここに入れる
   const layer = new FeatureLayer({
     url: "https://services9.arcgis.com/YtkgVT3n52Tm7z1d/arcgis/rest/services/waterStationTable/FeatureServer"
   });
@@ -55,33 +54,54 @@ require([
     returnGeometry: false
   }).then(res => {
 
-    // ★ フィールド名を調整
-    const chartData = res.features.map(f => ({
-      name: f.attributes.name,   // ←変更する
-      value: f.attributes.value  // ←変更する
-    }));
+    // ===== 合計（複数レコード対応）=====
+    let total稼働数 = 0;
+    let total稼働可能数 = 0;
+    let total給水 = 0;
 
-    updateAll(chartData);
+    res.features.forEach(f => {
+      total稼働数 += f.attributes["稼働数"];
+      total稼働可能数 += f.attributes["稼働可能数"];
+      total給水 += f.attributes["災害時給水ステーション数"];
+    });
+
+    // 稼働率（再計算の方が安全）
+    const 稼働率 = total稼働可能数 === 0
+      ? 0
+      : (total稼働数 / total稼働可能数 * 100).toFixed(1);
+
+    // ===== グラフ用データ =====
+    const chartData = [
+      { name: "稼働数", value: total稼働数 },
+      { name: "稼働可能数", value: total稼働可能数 },
+      { name: "給水ステーション", value: total給水 }
+    ];
+
+    updateAll(chartData, 稼働率);
   });
 
-  function updateAll(chartData) {
+  function updateAll(chartData, rate) {
+
     const labels = chartData.map(d => d.name);
     const values = chartData.map(d => d.value);
 
-    // グラフ再生成
     charts.forEach(c => c.destroy());
     charts = [];
 
-    charts.push(createChart('barChart', 'bar', labels, values)); //棒グラフ
-    charts.push(createChart('lineChart', 'line', labels, values)); //線グラフ
-    charts.push(createChart('pieChart', 'pie', labels, values)); //円グラフ
+    charts.push(createChart('barChart', 'bar', labels, values));
+    charts.push(createChart('lineChart', 'line', labels, values));
+    charts.push(createChart('pieChart', 'pie', labels, values));
 
-    // 表
+    // ===== 表 =====
     const tbody = document.querySelector('#dataTable tbody');
     tbody.innerHTML = '';
+
     chartData.forEach(d => {
       tbody.innerHTML += `<tr><td>${d.name}</td><td>${d.value}</td></tr>`;
     });
+
+    // 稼働率追加
+    tbody.innerHTML += `<tr><td>稼働率</td><td>${rate}%</td></tr>`;
   }
 
   function createChart(id, type, labels, values) {
@@ -95,9 +115,6 @@ require([
       }
     });
   }
-
-});
-</script>
 
 </body>
 </html>
