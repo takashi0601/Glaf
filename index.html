@@ -12,7 +12,7 @@
   <style>
     body { font-family: Arial; }
     .container { display: flex; flex-wrap: wrap; gap: 30px; }
-    canvas { width: 800px !important; height: 600px !important; }
+    canvas { width: 1000px !important; height: 600px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px 12px; }
   </style>
@@ -23,23 +23,20 @@
   <div class="container">
     <canvas id="barChart"></canvas>
     <canvas id="lineChart"></canvas>
-  </div>
-
-  <div class="container">
     <canvas id="pieChart"></canvas>
+  </div>    
 
-    <table id="dataTable">
-      <thead>
-        <tr>
-          <th>稼働数</th>
-          <th>稼働可能数</th>
-          <th>給水ステーション</th>
-          <th>稼働率</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>稼働数</th>
+        <th>稼働可能数</th>
+        <th>給水ステーション</th>
+        <th>稼働率</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
 <script>
 require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
