@@ -13,7 +13,7 @@
   <style>
     body { font-family: Arial; }
     .container { display: flex; flex-wrap: wrap; gap: 30px; }
-    canvas { width: 800px !important; height: 600px !important; }
+    canvas { width: 900px !important; height: 600px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px 12px; }
   </style>
@@ -22,7 +22,7 @@
 
 <body>
   <div class="container">
-    <canvas id="barChart"></canvas> <!-- 棒グラフ -->
+    <canvas id="barChart" ></canvas> <!-- 棒グラフ -->
     <canvas id="lineChart"></canvas> <!-- 線グラフ -->
     <canvas id="pieChart"></canvas> <!-- 円グラフ -->
   </div>    
@@ -124,13 +124,19 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
         x: {
           title: {
             display: true,
-            text: "地点"
+            text: "地点",
+            font: {
+              size: 24
+            }
           }
         },
         y: {
           title: {
             display: true,
-            text: "数"
+            text: "数",
+            font: {
+              size: 24
+            }
           }
         }
       }
@@ -162,7 +168,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
         legend: {
           labels: {
             font: {
-              size: 16
+              size: 30
             }
           }
         }
@@ -171,13 +177,19 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
         x: {
           title: {
             display: true,
-            text: "地点"
+            text: "地点",
+            font: {
+              size: 24
+            }
           }
         },
         y: {
           title: {
             display: true,
-            text: "数"
+            text: "数",
+            font: {
+              size: 24
+            }
           }
         }
       }
@@ -205,18 +217,18 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     plugins: {
       legend: {
         labels: {
-          font: { size: 16 }
+          font: { size: 30 }
         }
       },
       title: {
         display: true,
         text: "稼働率",
-        font: { size: 16 }
+        font: { size: 30 }
       },
       datalabels: {
         color: "#000",
         font: {
-          size: 14,
+          size: 24,
           weight: "bold"
         },
         formatter: (value, context) => {
