@@ -33,12 +33,12 @@
 </table>
 
 <script>
-  // ★ ここだけ変更すれば全部に反映
+  // 表、グラフのデータ
   const chartData = [
-    { name: 'A', value: 12 },
-    { name: 'B', value: 19 },
-    { name: 'C', value: 3 },
-    { name: 'D', value: 5 }
+    { name: 'A', value: 21 },
+    { name: 'B', value: 32 },
+    { name: 'C', value: 11 },
+    { name: 'D', value: 16 }
   ];
 
   // 共通変換
@@ -60,9 +60,9 @@
     });
   }
 
-  createChart('barChart', 'bar');
-  createChart('lineChart', 'line');
-  createChart('pieChart', 'pie');
+  createChart('barChart', 'bar');　//棒グラフ
+  createChart('lineChart', 'line');　//線グラフ
+  createChart('pieChart', 'pie');　//円グラフ
 
   // ===== 表 =====
   function renderTable() {
