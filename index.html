@@ -6,10 +6,10 @@
 
   <!-- ArcGIS -->
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.29/"></script>
+  <script src="https://js.arcgis.com/4.29/"　defer></script>
 
   <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"　defer></script>
 
   <style>
     .container { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -43,7 +43,7 @@ require([
 ], function(FeatureLayer) {
 
   const layer = new FeatureLayer({
-    url: "https://services9.arcgis.com/YtkgVT3n52Tm7z1d/arcgis/rest/services/waterStationTable/FeatureServer"
+    url: "https://services9.arcgis.com/YtkgVT3n52Tm7z1d/arcgis/rest/services/waterStationTable/FeatureServer/0"
   });
 
   let charts = [];
