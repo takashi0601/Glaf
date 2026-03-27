@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>グラフサンプル</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial; }
+    .container { display: flex; flex-wrap: wrap; gap: 30px; }
+    canvas { width: 400px !important; height: 300px !important; }
+    table { border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+
+<h2>グラフ一覧</h2>
+
+<div class="container">
+  <canvas id="barChart"></canvas>
+  <canvas id="lineChart"></canvas>
+  <canvas id="pieChart"></canvas>
+</div>
+
+<h3>データ表</h3>
+<table>
+  <thead>
+    <tr>
+      <th>項目</th>
+      <th>値</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>A</td><td>12</td></tr>
+    <tr><td>B</td><td>19</td></tr>
+    <tr><td>C</td><td>3</td></tr>
+    <tr><td>D</td><td>5</td></tr>
+  </tbody>
+</table>
+
+<script>
+  const labels = ['A', 'B', 'C', 'D'];
+  const data = [12, 19, 3, 5];
+
+  // 棒グラフ
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '棒グラフ',
+        data: data
+      }]
+    }
+  });
+
+  // 折れ線グラフ
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '線グラフ',
+        data: data,
+        fill: false
+      }]
+    }
+  });
+
+  // 円グラフ
+  new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data
+      }]
+    }
+  });
+</script>
+
+</body>
+</html>
