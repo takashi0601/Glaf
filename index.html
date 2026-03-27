@@ -5,6 +5,7 @@
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
   <!-- ArcGIS Maps SDK for JavaScript -->
   <script src="https://js.arcgis.com/4.29/"></script>
@@ -90,28 +91,51 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
 
   // ===== 棒グラフ =====
   new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "給水ステーション数",
-        data: 給水配列
-      }]
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [
+      {
+        label: "稼働数",
+        data: 稼働数配列
+      },
+      {
+        label: "稼働可能数",
+        data: 稼働可能数配列
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          font: { size: 16 }
+        }
+      },
+      title: {
+        display: true,
+        text: "稼働数 / 稼働可能数",
+        font: { size: 16 }
+      }
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              size: 16
-            }
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "地点"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "数"
           }
         }
       }
-    }
-  });
+  }
+});
 
   // ===== 線グラフ =====
   new Chart(document.getElementById('lineChart'), {
@@ -142,6 +166,20 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
             }
           }
         }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "地点"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "数"
+          }
+        }
       }
     }
   });
@@ -151,30 +189,46 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
   const total可能 = 稼働可能数配列.reduce((a, b) => a + b, 0);
 
   new Chart(document.getElementById('pieChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ["稼働", "未稼働"],
-      datasets: [{
-        data: [
-          total稼働数,
-          total可能 - total稼働数
-        ]
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              size: 16
-            }
-          }
+  type: 'doughnut',
+  data: {
+    labels: ["稼働", "未稼働"],
+    datasets: [{
+      data: [
+        total稼働数,
+        total可能 - total稼働数
+      ]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          font: { size: 16 }
+        }
+      },
+      title: {
+        display: true,
+        text: "稼働率",
+        font: { size: 16 }
+      },
+      datalabels: {
+        color: "#000",
+        font: {
+          size: 14,
+          weight: "bold"
+        },
+        formatter: (value, context) => {
+          const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          const percent = (value / total * 100).toFixed(1);
+          return percent + "%";
         }
       }
     }
-  });
+  },
+  plugins: [ChartDataLabels]  // ←これ重要
+});
 
     });
 
