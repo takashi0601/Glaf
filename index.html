@@ -2,19 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>グラフサンプル</title>
+  <title>共通データグラフ</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial; }
-    .container { display: flex; flex-wrap: wrap; gap: 30px; }
+    .container { display: flex; flex-wrap: wrap; gap: 20px; }
     canvas { width: 400px !important; height: 300px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px 12px; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
   </style>
 </head>
 <body>
 
-<h2>グラフ一覧</h2>
+<h2>共通データグラフ</h2>
 
 <div class="container">
   <canvas id="barChart"></canvas>
@@ -23,60 +22,61 @@
 </div>
 
 <h3>データ表</h3>
-<table>
+<table id="dataTable">
   <thead>
     <tr>
       <th>項目</th>
       <th>値</th>
     </tr>
   </thead>
-  <tbody>
-    <tr><td>A</td><td>12</td></tr>
-    <tr><td>B</td><td>19</td></tr>
-    <tr><td>C</td><td>3</td></tr>
-    <tr><td>D</td><td>5</td></tr>
-  </tbody>
+  <tbody></tbody>
 </table>
 
 <script>
-  const labels = ['A', 'B', 'C', 'D'];
-  const data = [12, 19, 3, 5];
+  // ★ ここだけ変更すれば全部に反映
+  const chartData = [
+    { name: 'A', value: 12 },
+    { name: 'B', value: 19 },
+    { name: 'C', value: 3 },
+    { name: 'D', value: 5 }
+  ];
 
-  // 棒グラフ
-  new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: '棒グラフ',
-        data: data
-      }]
-    }
-  });
+  // 共通変換
+  const labels = chartData.map(d => d.name);
+  const values = chartData.map(d => d.value);
 
-  // 折れ線グラフ
-  new Chart(document.getElementById('lineChart'), {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: '線グラフ',
-        data: data,
-        fill: false
-      }]
-    }
-  });
+  // ===== グラフ =====
+  function createChart(id, type) {
+    return new Chart(document.getElementById(id), {
+      type: type,
+      data: {
+        labels: labels,
+        datasets: [{
+          label: type + 'グラフ',
+          data: values,
+          fill: false
+        }]
+      }
+    });
+  }
 
-  // 円グラフ
-  new Chart(document.getElementById('pieChart'), {
-    type: 'pie',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: data
-      }]
-    }
-  });
+  createChart('barChart', 'bar');
+  createChart('lineChart', 'line');
+  createChart('pieChart', 'pie');
+
+  // ===== 表 =====
+  function renderTable() {
+    const tbody = document.querySelector('#dataTable tbody');
+    tbody.innerHTML = '';
+
+    chartData.forEach(d => {
+      const row = `<tr><td>${d.name}</td><td>${d.value}</td></tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+
+  renderTable();
+
 </script>
 
 </body>
