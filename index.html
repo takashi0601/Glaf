@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>共通データグラフ</title>
+  <meta charset="utf-8">
+  <title>ArcGIS グラフ連動</title>
+
+  <!-- ArcGIS -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    .container { display: flex; flex-wrap: wrap; gap: 20px; }
+    .container { display: flex; gap: 20px; flex-wrap: wrap; }
     canvas { width: 400px !important; height: 300px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; }
   </style>
 </head>
+
 <body>
 
-<h2>共通データグラフ</h2>
+<h2>ArcGISデータ → グラフ</h2>
 
 <div class="container">
   <canvas id="barChart"></canvas>
@@ -24,59 +32,71 @@
 <h3>データ表</h3>
 <table id="dataTable">
   <thead>
-    <tr>
-      <th>項目</th>
-      <th>値</th>
-    </tr>
+    <tr><th>名称</th><th>値</th></tr>
   </thead>
   <tbody></tbody>
 </table>
 
 <script>
-  // 表、グラフのデータ
-  const chartData = [
-    { name: 'A', value: 21 },
-    { name: 'B', value: 32 },
-    { name: 'C', value: 11 },
-    { name: 'D', value: 16 }
-  ];
+require([
+  "esri/layers/FeatureLayer"
+], function(FeatureLayer) {
 
-  // 共通変換
-  const labels = chartData.map(d => d.name);
-  const values = chartData.map(d => d.value);
+  // レイヤーをここに入れる
+  const layer = new FeatureLayer({
+    url: "https://services9.arcgis.com/YtkgVT3n52Tm7z1d/arcgis/rest/services/waterStationTable/FeatureServer"
+  });
 
-  // ===== グラフ =====
-  function createChart(id, type) {
+  let charts = [];
+
+  layer.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+  }).then(res => {
+
+    // ★ フィールド名を調整
+    const chartData = res.features.map(f => ({
+      name: f.attributes.name,   // ←変更する
+      value: f.attributes.value  // ←変更する
+    }));
+
+    updateAll(chartData);
+  });
+
+  function updateAll(chartData) {
+    const labels = chartData.map(d => d.name);
+    const values = chartData.map(d => d.value);
+
+    // グラフ再生成
+    charts.forEach(c => c.destroy());
+    charts = [];
+
+    charts.push(createChart('barChart', 'bar', labels, values)); //棒グラフ
+    charts.push(createChart('lineChart', 'line', labels, values)); //線グラフ
+    charts.push(createChart('pieChart', 'pie', labels, values)); //円グラフ
+
+    // 表
+    const tbody = document.querySelector('#dataTable tbody');
+    tbody.innerHTML = '';
+    chartData.forEach(d => {
+      tbody.innerHTML += `<tr><td>${d.name}</td><td>${d.value}</td></tr>`;
+    });
+  }
+
+  function createChart(id, type, labels, values) {
     return new Chart(document.getElementById(id), {
       type: type,
       data: {
         labels: labels,
         datasets: [{
-          label: type + 'グラフ',
-          data: values,
-          fill: false
+          data: values
         }]
       }
     });
   }
 
-  createChart('barChart', 'bar');　//棒グラフ
-  createChart('lineChart', 'line');　//線グラフ
-  createChart('pieChart', 'pie');　//円グラフ
-
-  // ===== 表 =====
-  function renderTable() {
-    const tbody = document.querySelector('#dataTable tbody');
-    tbody.innerHTML = '';
-
-    chartData.forEach(d => {
-      const row = `<tr><td>${d.name}</td><td>${d.value}</td></tr>`;
-      tbody.innerHTML += row;
-    });
-  }
-
-  renderTable();
-
+});
 </script>
 
 </body>
