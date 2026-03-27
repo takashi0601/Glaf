@@ -20,22 +20,23 @@
 </head>
 
 <body>
+  <div class="container">
+    <canvas id="barChart"></canvas>
+    <canvas id="lineChart"></canvas>
+    <canvas id="pieChart"></canvas>
 
-<canvas id="barChart"></canvas>
-<canvas id="lineChart"></canvas>
-<canvas id="pieChart"></canvas>
-
-<table id="dataTable">
-  <thead>
-    <tr>
-      <th>稼働数</th>
-      <th>稼働可能数</th>
-      <th>給水ステーション</th>
-      <th>稼働率</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>稼働数</th>
+          <th>稼働可能数</th>
+          <th>給水ステーション</th>
+          <th>稼働率</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
 <script>
 require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
