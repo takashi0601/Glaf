@@ -2,46 +2,28 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>ArcGIS グラフ連動</title>
 
-  <!-- ArcGIS -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.29/"　defer></script>
+  <!-- ArcGIS（deferなし） -->
+  <script src="https://js.arcgis.com/4.29/"></script>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"　defer></script>
-
-  <style>
-    .container { display: flex; gap: 20px; flex-wrap: wrap; }
-    canvas { width: 400px !important; height: 300px !important; }
-    table { border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-  </style>
+  <!-- Chart.js（deferあり） -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 
 <body>
 
-<h2>ArcGISデータ → グラフ</h2>
+<canvas id="barChart"></canvas>
+<canvas id="lineChart"></canvas>
+<canvas id="pieChart"></canvas>
 
-<div class="container">
-  <canvas id="barChart"></canvas>
-  <canvas id="lineChart"></canvas>
-  <canvas id="pieChart"></canvas>
-</div>
-
-<h3>データ表</h3>
 <table id="dataTable">
-  <thead>
-    <tr><th>名称</th><th>値</th></tr>
-  </thead>
   <tbody></tbody>
 </table>
 
 <script>
-require([
-  "esri/layers/FeatureLayer"
-], function(FeatureLayer) {
+require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
 
+  // ★必ず /0
   const layer = new FeatureLayer({
     url: "https://services9.arcgis.com/YtkgVT3n52Tm7z1d/arcgis/rest/services/waterStationTable/FeatureServer/0"
   });
@@ -54,58 +36,44 @@ require([
     returnGeometry: false
   }).then(res => {
 
-    // ===== 合計（複数レコード対応）=====
     let total稼働数 = 0;
     let total稼働可能数 = 0;
     let total給水 = 0;
 
     res.features.forEach(f => {
-      total稼働数 += f.attributes["稼働数"];
-      total稼働可能数 += f.attributes["稼働可能数"];
-      total給水 += f.attributes["災害時給水ステーション数"];
+      total稼働数 += Number(f.attributes["稼働数"]) || 0;
+      total稼働可能数 += Number(f.attributes["稼働可能数"]) || 0;
+      total給水 += Number(f.attributes["災害時給水ステーション数"]) || 0;
     });
 
-    // 稼働率（再計算の方が安全）
     const 稼働率 = total稼働可能数 === 0
       ? 0
       : (total稼働数 / total稼働可能数 * 100).toFixed(1);
 
-    // ===== グラフ用データ =====
-    const chartData = [
-      { name: "稼働数", value: total稼働数 },
-      { name: "稼働可能数", value: total稼働可能数 },
-      { name: "給水ステーション", value: total給水 }
-    ];
+    const labels = ["稼働数", "稼働可能数", "給水ステーション"];
+    const values = [total稼働数, total稼働可能数, total給水];
 
-    updateAll(chartData, 稼働率);
+    createChart('barChart', 'bar', labels, values);
+    createChart('lineChart', 'line', labels, values);
+    createChart('pieChart', 'pie', labels, values);
+
+    const tbody = document.querySelector('#dataTable tbody');
+    tbody.innerHTML = `
+      <tr><td>稼働数</td><td>${total稼働数}</td></tr>
+      <tr><td>稼働可能数</td><td>${total稼働可能数}</td></tr>
+      <tr><td>給水ステーション</td><td>${total給水}</td></tr>
+      <tr><td>稼働率</td><td>${稼働率}%</td></tr>
+    `;
   });
 
-  function updateAll(chartData, rate) {
-
-    const labels = chartData.map(d => d.name);
-    const values = chartData.map(d => d.value);
-
-    charts.forEach(c => c.destroy());
-    charts = [];
-
-    charts.push(createChart('barChart', 'bar', labels, values));
-    charts.push(createChart('lineChart', 'line', labels, values));
-    charts.push(createChart('pieChart', 'pie', labels, values));
-
-    // ===== 表 =====
-    const tbody = document.querySelector('#dataTable tbody');
-    tbody.innerHTML = '';
-
-    chartData.forEach(d => {
-      tbody.innerHTML += `<tr><td>${d.name}</td><td>${d.value}</td></tr>`;
-    });
-
-    // 稼働率追加
-    tbody.innerHTML += `<tr><td>稼働率</td><td>${rate}%</td></tr>`;
-  }
-
   function createChart(id, type, labels, values) {
-    return new Chart(document.getElementById(id), {
+    const el = document.getElementById(id);
+    if (!el) {
+      console.error(id + " が見つからない");
+      return;
+    }
+
+    new Chart(el, {
       type: type,
       data: {
         labels: labels,
@@ -115,8 +83,9 @@ require([
       }
     });
   }
-});
 
+});
 </script>
+
 </body>
 </html>
