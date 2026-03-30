@@ -12,10 +12,13 @@
 
   <style>
     body { font-family: Arial; }
-    .container { display: flex; flex-wrap: wrap; gap: 30px; }
+    .container { display: flex; flex-wrap: wrap; align-items: center; gap: 30px; }
     canvas { width: 900px !important; height: 300px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px 12px; }
+    #legendBox { font-size: 16px; }
+    .legend-item { margin-bottom: 10px; }
+    .legend-color { display: inline-block;  width: 14px;  height: 14px;  margin-right: 8px; }
   </style>
   
 </head>
@@ -24,8 +27,14 @@
   <div class="container">
     <canvas id="barChart" ></canvas> <!-- 棒グラフ -->
     <canvas id="lineChart"></canvas> <!-- 線グラフ -->
-    <canvas id="pieChart"></canvas> <!-- 円グラフ -->
-  </div>    
+    <!-- <canvas id="pieChart"></canvas>  -->
+    <div class="container">
+      <div class="chart-box">
+        <canvas id="pieChart"></canvas> <!-- 円グラフ -->
+      </div>
+      <div id="legendBox"></div>
+      </div>
+    </div>    
 
   <table id="dataTable">
     <thead>
@@ -259,9 +268,10 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        labels: {
-          font: { size: 30 }
-        }
+        display: false,
+        // labels: {
+        //   font: { size: 30 }
+        // }
       },
       title: {
         display: true,
@@ -280,11 +290,27 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
         //   const percent = (value / total * 100).toFixed(1);
         //   return percent + "%";
         // }
+        }
       }
-    }
-  },
-  plugins: [ChartDataLabels, centerTextPlugin] 
-});
+    },
+    plugins: [ChartDataLabels, centerTextPlugin] 
+  });
+
+    const 稼働 = 稼働数;
+    const 未稼働 = 稼働可能数 - 稼働数;
+
+    const legendBox = document.getElementById("legendBox");
+
+    legendBox.innerHTML = `
+      <div class="legend-item">
+        <span class="legend-color" style="background:#36A2EB"></span>
+        稼働　<strong>${稼働}</strong> 箇所
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background:#FF6384"></span>
+         未稼働　<strong>${未稼働}</strong> 箇所
+      </div>
+    `;
 
     });
 
