@@ -16,7 +16,7 @@
     canvas { width: 700px !important; height: 300px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px 12px; }
-    #legendBox { font-size: 24px; }
+    #legendBox { font-size: 18px; }
     .legend-item { margin-bottom: 10px; }
     .legend-color { display: inline-block;  width: 14px;  height: 14px;  margin-right: 8px; }
   </style>
@@ -242,7 +242,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       const total = data.reduce((a, b) => a + b, 0);
       const 稼働率 = total === 0 ? 0 : Math.round(data[0] / total * 100);
       ctx.save();
-      ctx.font = "bold 64px Arial";
+      ctx.font = "bold 40px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
@@ -258,7 +258,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     datasets: [{
       data: [
         稼働数,
-        稼働可能数
+        稼働可能数-稼働数
       ]
     }]
   },
@@ -297,7 +297,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
   });
 
     const 稼働 = 稼働数;
-    const 未稼働 = 稼働可能数;
+    const 未稼働 = 稼働可能数-稼働数;
 
     const legendBox = document.getElementById("legendBox");
 
