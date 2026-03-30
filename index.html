@@ -219,8 +219,8 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
   // ===== 円グラフ =====
   //const total稼働数 = 稼働数配列.reduce((a, b) => a + b, 0);
   //const total可能 = 稼働可能数配列.reduce((a, b) => a + b, 0);
-  const 稼働数_1行目 = 稼働数配列[0] || 0;
-  const 稼働可能数_1行目 = 稼働可能数配列[0] || 0;
+  const 稼働数 = 稼働数配列[0] || 0;
+  const 稼働可能数 = 稼働可能数配列[0] || 0;
 
   new Chart(document.getElementById('pieChart'), {
   type: 'doughnut',
@@ -228,8 +228,8 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     labels: ["稼働", "未稼働"],
     datasets: [{
       data: [
-        total稼働数,
-        total可能 - total稼働数
+        稼働数,
+        稼働可能数 - 稼働数
       ]
     }]
   },
