@@ -241,7 +241,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       const centerY = (chartArea.top + chartArea.bottom) / 2;
       const total = 稼働数/給水数*100;
       ctx.save();
-      ctx.font = "bold 40px Arial";
+      ctx.font = "bold 24px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
@@ -269,13 +269,13 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       legend: {
         //display: false,
         labels: {
-          font: { size: 22 }
+          font: { size: 16 }
         }
       },
       title: {
         display: true,
         text: "稼働率",
-        font: { size: 22 }
+        font: { size: 16 }
       },
       datalabels: {
         // display: false,
