@@ -13,7 +13,7 @@
   <style>
     body { font-family: Arial; }
     .container { display: flex; flex-wrap: wrap; gap: 30px; }
-    canvas { width: 500px !important; height: 400px !important; }
+    canvas { width: 500px !important; height: 300px !important; }
     table { border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px 12px; }
   </style>
@@ -217,8 +217,10 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
   });
 
   // ===== 円グラフ =====
-  const total稼働数 = 稼働数配列.reduce((a, b) => a + b, 0);
-  const total可能 = 稼働可能数配列.reduce((a, b) => a + b, 0);
+  //const total稼働数 = 稼働数配列.reduce((a, b) => a + b, 0);
+  //const total可能 = 稼働可能数配列.reduce((a, b) => a + b, 0);
+  const 稼働数_1行目 = 稼働数配列[0] || 0;
+  const 稼働可能数_1行目 = 稼働可能数配列[0] || 0;
 
   new Chart(document.getElementById('pieChart'), {
   type: 'doughnut',
