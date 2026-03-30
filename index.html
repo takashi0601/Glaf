@@ -238,13 +238,14 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       const { ctx, chartArea } = chart;
       if (!chartArea) return;
       const centerX = (chartArea.left + chartArea.right) / 2;
-      const centerY = (chartArea.top + chartArea.bottom) / 2;;
+      const centerY = (chartArea.top + chartArea.bottom) / 2;
+      const total = 稼働数/給水数*100;
       ctx.save();
       ctx.font = "bold 40px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
-      ctx.fillText(給水数 + "%", centerX, centerY);
+      ctx.fillText(total + "%", centerX, centerY);
       ctx.restore();
     }
   };
