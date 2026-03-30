@@ -225,7 +225,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
   new Chart(document.getElementById('pieChart'), {
   type: 'doughnut',
   data: {
-    labels: ["稼働", "未稼働"],
+    //labels: ["稼働", "未稼働"],
     datasets: [{
       data: [
         稼働数,
@@ -234,6 +234,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
     }]
   },
   options: {
+    cutout: "60%",
     rotation: 60 ,
     responsive: true,
     maintainAspectRatio: false,
@@ -262,7 +263,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       }
     }
   },
-  plugins: [ChartDataLabels]  // ←これ重要
+  plugins: [ChartDataLabels, centerTextPlugin] 
 });
 
     });
