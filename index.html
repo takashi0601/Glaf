@@ -278,17 +278,17 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
         font: { size: 30 }
       },
       datalabels: {
-        display: false,
-        // color: "#000",
-        // font: {
-        //   size: 26,
-        //   weight: "bold"
-        // },
-        // formatter: (value, context) => {
-        //   const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-        //   const percent = (value / total * 100).toFixed(1);
-        //   return percent + "%";
-        // }
+        // display: false,
+        color: "#000",
+        font: {
+          size: 26,
+          weight: "bold"
+        },
+        formatter: (value, context) => {
+          const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          const percent = (value / total * 100).toFixed(1);
+          return percent + "%";
+        }
         }
       }
     },
