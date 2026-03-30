@@ -236,7 +236,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       ctx.font = "bold 32px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#333";
+      ctx.fillStyle = "#000";
       ctx.fillText(稼働率 + "%", centerX, centerY);
       ctx.restore();
     }
@@ -268,18 +268,18 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
         text: "稼働率",
         font: { size: 30 }
       },
-      datalabels: {
-        color: "#000",
-        font: {
-          size: 26,
-          weight: "bold"
-        },
-        formatter: (value, context) => {
-          const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-          const percent = (value / total * 100).toFixed(1);
-          return percent + "%";
-        }
-      }
+      // datalabels: {
+      //   color: "#000",
+      //   font: {
+      //     size: 26,
+      //     weight: "bold"
+      //   },
+      //   formatter: (value, context) => {
+      //     const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+      //     const percent = (value / total * 100).toFixed(1);
+      //     return percent + "%";
+      //   }
+      // }
     }
   },
   plugins: [ChartDataLabels, centerTextPlugin] 
