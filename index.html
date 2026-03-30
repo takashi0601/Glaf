@@ -233,7 +233,7 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       const total = data.reduce((a, b) => a + b, 0);
       const 稼働率 = total === 0 ? 0 : Math.round(data[0] / total * 100);
       ctx.save();
-      ctx.font = "bold 32px Arial";
+      ctx.font = "bold 64px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
