@@ -222,6 +222,28 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
   const 稼働数 = 稼働数配列[0] || 0;
   const 稼働可能数 = 稼働可能数配列[0] || 0;
 
+  const centerTextPlugin = {
+    id: 'centerText',
+    beforeDraw(chart) {
+      const { width, height, ctx } = chart;
+      ctx.restore();
+
+      const data = chart.data.datasets[0].data;
+      const total = data.reduce((a, b) => a + b, 0);
+
+      const 稼働率 = total === 0 ? 0 : Math.round(data[0] / total * 100);
+
+      ctx.font = "bold 32px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#333";
+
+      ctx.fillText(稼働率 + "%", width / 2, height / 2);
+
+      ctx.save();
+    }
+  };
+
   new Chart(document.getElementById('pieChart'), {
   type: 'doughnut',
   data: {
