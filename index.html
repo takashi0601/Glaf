@@ -26,6 +26,7 @@
 <body>
   <div class="container">
     <canvas id="barChart" ></canvas> <!-- 棒グラフ -->
+    <canvas id="myChart" ></canvas> <!-- 棒グラフ -->
     <canvas id="lineChart"></canvas> <!-- 線グラフ -->
     <!-- <canvas id="pieChart"></canvas>  -->
     <div class="container">
@@ -161,6 +162,35 @@ require(["esri/layers/FeatureLayer"], function(FeatureLayer) {
       }
   }
 });
+
+    new Chart(document.getElementById('myChart'), {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+        label: "稼働数",
+        data: 稼働数配列
+      },
+      {
+        label: "稼働可能数",
+        data: 稼働可能数配列
+      }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              stacked: true
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true
+            }
+          }
+        }
+      });
 
   // ===== 線グラフ =====
   new Chart(document.getElementById('lineChart'), {
